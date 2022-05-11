@@ -59,13 +59,22 @@ def insert_elements_from_csv(my_cursor,my_connection,fileName):
                     )
                 my_cursor.execute(sql)
 
-    print("inserted")
-    data = my_cursor.execute(''' SELECT * FROM table1''')
-    for row in data:
-        print(row)
+    print("ALL VALUES WERE INSERTED !!")
+    # data = my_cursor.execute(''' SELECT * FROM table1''')
+    # for row in data:
+    #     print(row)
     
     # Commit your changes in the database    
     my_connection.commit()
+
+
+
+def remove_all_negative_bill_amt(my_cursor,my_connection):
+    sql = 'DELETE from table1 where BILL_AMT<0'
+    my_cursor.execute(sql)
+    my_connection.commit()
+
+
 
 def main():
     print("hello world")
@@ -76,8 +85,13 @@ def main():
         my_cursor = my_connection.cursor()
         create_table(my_cursor)
         insert_elements_from_csv(my_cursor,my_connection,"CCSubset.csv")
+        remove_all_negative_bill_amt(my_cursor,my_connection)
         
     finally:
+        sql = "SELECT * from table1"
+        my_cursor.execute(sql)
+        recs = my_cursor.fetchall()
+        print(recs)
         my_connection.close()
         print("done !")
 
