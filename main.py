@@ -73,14 +73,17 @@ def remove_all_negative_bill_amt(my_cursor,my_connection):
     sql = 'DELETE from table1 where BILL_AMT<0'
     my_cursor.execute(sql)
     my_connection.commit()
-
-def select_ten_first_rows(my_cursor,my_connection):
+    sql = '''SELECT * from table1'''
+    my_cursor.execute(sql)
+    recs = my_cursor.fetchall()
+    print(recs)
+def select_ten_first_rows(my_cursor):
     sql = 'SELECT *from table1 LIMIT 10'
     my_cursor.execute(sql)
     recs = my_cursor.fetchall()
     print(recs)
 
-def select_bill_amt_greater_than_500000(my_cursor,my_connection):
+def select_bill_amt_greater_than_500000(my_cursor):
     sql = 'SELECT *from table1 WHERE BILL_AMT > 500000'
     my_cursor.execute(sql)
     recs = my_cursor.fetchall()
@@ -88,22 +91,17 @@ def select_bill_amt_greater_than_500000(my_cursor,my_connection):
 
 
 def main():
-    print("hello world")
-    # C:\sqlite\db
     try:
 
         my_connection = database_connection(r"mydatabase.db")
         my_cursor = my_connection.cursor()
         create_table(my_cursor)
         insert_elements_from_csv(my_cursor,my_connection,"CCSubset.csv")
-        # remove_all_negative_bill_amt(my_cursor,my_connection)
-        # select_ten_first_rows(my_cursor,my_connection)
-        select_bill_amt_greater_than_500000(my_cursor,my_connection)
+        remove_all_negative_bill_amt(my_cursor,my_connection)
+        select_ten_first_rows(my_cursor)
+        select_bill_amt_greater_than_500000(my_cursor)
     finally:
-        # sql = '''SELECT * from table1 limit 10'''
-        # my_cursor.execute(sql)
-        # recs = my_cursor.fetchall()
-        # print(recs)
+       
         my_connection.close()
         print("done !")
 
